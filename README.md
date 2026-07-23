@@ -1,21 +1,21 @@
 # 🧬 Protein Translator
 
-Um tradutor simples de **sequências de DNA para proteínas** desenvolvido em Python.
+Um tradutor simples de **sequências de DNA ou RNA para proteínas** desenvolvido em Python.
 
-O programa identifica o **primeiro códon de início (`ATG`)**, realiza a tradução da sequência utilizando o **código genético padrão** e interrompe a tradução ao encontrar um **códon de parada (`TAA`, `TAG` ou `TGA`)**.
+O programa identifica o **primeiro códon de início (`AUG`)**, realiza a tradução da sequência utilizando o **código genético padrão** e interrompe a tradução ao encontrar um **códon de parada (`UAA`, `UAG` ou `UGA`)**.
 
 ## Funcionalidades
 
-* Tradução de sequências de DNA em proteínas.
-* Busca automática pelo primeiro códon de início (`ATG`).
+* Tradução de sequências de DNA ou RNA em proteínas.
+* Busca automática pelo primeiro códon de início (`AUG`).
 * Utiliza a tabela completa do código genético (64 códons).
 * Interrompe a tradução ao encontrar um códon de parada.
 * Código simples e comentado, ideal para estudos de Bioinformática e Biologia Molecular.
 
 ## Como funciona
 
-1. O usuário fornece uma sequência de DNA.
-2. O programa procura o primeiro `ATG`.
+1. O usuário fornece uma sequência de DNA ou RNA.
+2. O programa procura o primeiro `AUG`.
 3. A sequência é dividida em códons (trincas de nucleotídeos).
 4. Cada códon é convertido em seu aminoácido correspondente.
 5. A tradução termina quando um códon de parada é encontrado.
@@ -31,7 +31,7 @@ ATGGTTTTCTAA
 Tradução:
 
 ```text
-ATG | GTT | TTC | TAA
+AUG | GUU | UUC | UAA
  M     V     F   Stop
 ```
 
@@ -44,7 +44,7 @@ MVF
 ## Estrutura do projeto
 
 ```text
-protein-translator/
+tradutor-dna/
 │
 ├── main.py
 └── README.md
@@ -77,7 +77,7 @@ python main.py
 
 ## Próximas melhorias
 
-* [ ] Suporte a RNA (`U` → `T`).
+* [X] Suporte a DNA (`T` → `U`).
 * [ ] Tradução dos três quadros de leitura (Reading Frames).
 * [ ] Leitura de arquivos FASTA.
 * [ ] Saída em aminoácidos de três letras (Met, Val, Phe...).
