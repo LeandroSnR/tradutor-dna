@@ -187,13 +187,13 @@ Responsável pela execução do programa:
 Clone o repositório:
 
 ```bash
-git clone https://github.com/LeandroSnR/tradutor-dna.git
+git clone https://github.com/LeandroSnR/protein-translator.git
 ```
 
 Entre na pasta:
 
 ```bash
-cd tradutor-dna
+cd protein-translator
 ```
 
 Execute com FASTA:
