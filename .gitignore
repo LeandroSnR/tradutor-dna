@@ -1,0 +1,80 @@
+```gitignore
+# ==========================
+# Python
+# ==========================
+
+# Arquivos compilados
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Bibliotecas e ambientes virtuais
+venv/
+env/
+.venv/
+ENV/
+
+# Instalações locais
+*.egg
+*.egg-info/
+dist/
+build/
+
+# ==========================
+# Testes
+# ==========================
+
+# Cache do pytest/unittest
+.pytest_cache/
+.coverage
+htmlcov/
+
+# ==========================
+# IDEs e editores
+# ==========================
+
+# VS Code
+.vscode/
+
+# PyCharm
+.idea/
+
+# Sublime Text
+*.sublime-project
+*.sublime-workspace
+
+# ==========================
+# Sistema operacional
+# ==========================
+
+# Windows
+Thumbs.db
+Desktop.ini
+
+# macOS
+.DS_Store
+
+# Linux
+*~
+
+# ==========================
+# Dados de bioinformática
+# ==========================
+
+# Arquivos de sequências grandes
+*.fasta
+*.fa
+*.fastq
+*.fq
+
+# Arquivos de saída gerados
+outputs/
+results/
+
+# ==========================
+# Configurações locais
+# ==========================
+
+.env
+*.log
+```
