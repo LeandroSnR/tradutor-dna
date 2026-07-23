@@ -86,3 +86,15 @@ def traduzir_seis_frames(sequencia, tabela):
 
     return resultado
 
+def ler_fasta(caminho_arquivo):
+    """
+    Lê um arquivo FASTA e retorna a sequência.
+    """
+
+    with open(caminho_arquivo, "r") as arquivo:
+        linhas = arquivo.readlines()
+
+    # Remove a primeira linha (cabeçalho) e junta as demais
+    sequencia = "".join(linha.strip() for linha in linhas[1:])
+
+    return sequencia.upper()

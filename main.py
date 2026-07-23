@@ -1,90 +1,138 @@
+import sys
+
 from defs import (
-    traduzir_frame,
+    codigo_genetico_rna,
+    ler_fasta,
     traduzir_tres_frames,
-    traduzir_seis_frames,
-    codigo_genetico_rna
+    traduzir_seis_frames
 )
 
 
-def mostrar_menu():
+def mostrar_resultado(resultado):
+
+    print("\n===== RESULTADOS =====")
+
+    for frame, proteina in resultado.items():
+        print(f"{frame}: {proteina}")
+
+    print("======================\n")
+
+
+def processar_sequencia(sequencia):
+
+    print("\nSequência analisada:")
+    print(sequencia)
 
     print("""
-=============================
-   TRADUTOR DNA/RNA -> PROTEÍNA
-=============================
+Escolha a análise:
 
-1 - Traduzir um reading frame
-2 - Traduzir os 3 frames
-3 - Traduzir os 6 frames
-4 - Sair
+1 - Traduzir 3 frames (+1, +2, +3)
+2 - Traduzir 6 frames (+/-)
+
 """)
+
+    opcao = input("Opção: ")
+
+    if opcao == "1":
+
+        resultado = traduzir_tres_frames(
+            sequencia,
+            codigo_genetico_rna
+        )
+
+        mostrar_resultado(resultado)
+
+
+    elif opcao == "2":
+
+        resultado = traduzir_seis_frames(
+            sequencia,
+            codigo_genetico_rna
+        )
+
+        mostrar_resultado(resultado)
+
+
+    else:
+
+        print("Opção inválida.")
+
+
+def carregar_fasta(caminho):
+
+    try:
+
+        sequencia = ler_fasta(caminho)
+
+        processar_sequencia(sequencia)
+
+    except FileNotFoundError:
+
+        print(
+            f"Arquivo não encontrado: {caminho}"
+        )
+
+
+def menu():
+
+    print("""
+==============================
+   🧬 PROTEIN TRANSLATOR
+==============================
+
+1 - Digitar sequência
+2 - Abrir arquivo FASTA
+3 - Sair
+""")
+
+
+    opcao = input("Escolha: ")
+
+
+    if opcao == "1":
+
+        sequencia = input(
+            "\nDigite a sequência: "
+        )
+
+        processar_sequencia(
+            sequencia.upper()
+        )
+
+
+    elif opcao == "2":
+
+        caminho = input(
+            "\nArquivo FASTA: "
+        )
+
+        carregar_fasta(caminho)
+
+
+    elif opcao == "3":
+
+        exit()
+
+
+    else:
+
+        print("Opção inválida.")
 
 
 def main():
 
-    while True:
+    # Caso tenha sido passado um arquivo:
+    # python main.py exemplo.fasta
 
-        mostrar_menu()
+    if len(sys.argv) > 1:
 
-        opcao = input("Escolha uma opção: ")
+        arquivo = sys.argv[1]
 
-        if opcao == "1":
+        carregar_fasta(arquivo)
 
-            seq = input("Digite a sequência: ")
+    else:
 
-            frame = int(
-                input("Frame (1, 2 ou 3): ")
-            )
-
-            resultado = traduzir_frame(
-                seq,
-                codigo_genetico_rna,
-                frame - 1
-            )
-
-            print("\nProteína:")
-            print(resultado)
-
-
-        elif opcao == "2":
-
-            seq = input("Digite a sequência: ")
-
-            resultado = traduzir_tres_frames(
-                seq,
-                codigo_genetico_rna
-            )
-
-            print("\nResultados:")
-
-            for frame, proteina in resultado.items():
-                print(frame, ":", proteina)
-
-
-        elif opcao == "3":
-
-            seq = input("Digite a sequência: ")
-
-            resultado = traduzir_seis_frames(
-                seq,
-                codigo_genetico_rna
-            )
-
-            print("\nSeis reading frames:")
-
-            for frame, proteina in resultado.items():
-                print(frame, ":", proteina)
-
-
-        elif opcao == "4":
-
-            print("Encerrando...")
-            break
-
-
-        else:
-
-            print("Opção inválida!")
+        menu()
 
 
 if __name__ == "__main__":
