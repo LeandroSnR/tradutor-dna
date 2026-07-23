@@ -55,13 +55,13 @@ protein-translator/
 Clone o repositório:
 
 ```bash
-git clone https://github.com/SEU-USUARIO/SEU-REPOSITORIO.git
+git clone https://github.com/LeandroSnR/tradutor-dna.git
 ```
 
 Entre na pasta do projeto:
 
 ```bash
-cd SEU-REPOSITORIO
+cd tradutor-dna
 ```
 
 Execute:
