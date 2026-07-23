@@ -1,10 +1,8 @@
 # 🧬 Protein Translator
 
-Um tradutor de **sequências de DNA ou RNA para proteínas** desenvolvido em Python, com suporte a **arquivos FASTA** e análise de **reading frames**.
+Um tradutor de **sequências de DNA ou RNA para proteínas** desenvolvido em Python, com suporte a **reading frames**, **sequências FASTA** e análise dos seis possíveis quadros de leitura.
 
-O programa permite traduzir sequências genéticas utilizando o **código genético padrão**, analisando os diferentes quadros de leitura possíveis de uma sequência de DNA e gerando possíveis sequências proteicas.
-
-Este projeto representa uma etapa inicial de análise de sequências em Bioinformática, semelhante ao funcionamento de ferramentas de tradução de sequências como o **Transeq**.
+O projeto utiliza o **código genético padrão** para converter sequências de nucleotídeos em aminoácidos, permitindo explorar diferentes possibilidades de tradução de uma sequência genética.
 
 ---
 
@@ -12,75 +10,84 @@ Este projeto representa uma etapa inicial de análise de sequências em Bioinfor
 
 * Tradução de sequências de DNA ou RNA em proteínas.
 * Conversão automática de DNA (`T`) para RNA (`U`).
-* Leitura de sequências no formato FASTA.
-* Tradução dos três reading frames da fita direta:
+* Tradução de um reading frame específico.
+* Tradução dos três frames da fita original:
 
-  * +1
-  * +2
-  * +3
-* Tradução dos três reading frames da fita reverso-complementar:
-
-  * -1
-  * -2
-  * -3
+  * `+1`
+  * `+2`
+  * `+3`
 * Geração da sequência reverso-complementar.
-* Uso da tabela completa do código genético (64 códons).
-* Identificação de códons de parada:
+* Tradução dos três frames da fita reversa:
 
-  * `UAA`
-  * `UAG`
-  * `UGA`
+  * `-1`
+  * `-2`
+  * `-3`
+* Tradução completa dos seis reading frames.
+* Uso da tabela completa do código genético (64 códons).
+* Identificação de códons de parada (`UAA`, `UAG` e `UGA`) através do símbolo `*`.
+* Tratamento de códons inválidos utilizando `?`.
+* Leitura de arquivos no formato FASTA.
+* Validação de entradas e frames inválidos.
 * Testes automatizados utilizando `unittest`.
-* Interface via terminal.
 
 ---
 
 # Como funciona
 
-O DNA pode ser lido em três posições diferentes, chamadas de **reading frames**.
+Uma sequência de DNA pode ser lida em três diferentes posições, chamadas de **reading frames**.
 
-Por exemplo:
+Exemplo:
 
 ```text
 ATGGCCATT
 ```
 
-Pode ser interpretado como:
+Possibilidades de leitura:
 
 ```text
-Frame +1
+Frame +1:
 
 ATG | GCC | ATT
  M     A     I
 
 
-Frame +2
+Frame +2:
 
 TGG | CCA
  W     P
 
 
-Frame +3
+Frame +3:
 
 GGC | CAT
  G     H
 ```
 
-Como o DNA possui duas fitas complementares, também são analisados os frames da fita reversa, totalizando seis possibilidades.
+Como o DNA possui duas fitas complementares, o programa também calcula a sequência reverso-complementar e traduz seus três frames, totalizando seis possibilidades.
 
-O programa:
+Fluxo do programa:
 
-1. Recebe uma sequência de DNA/RNA ou arquivo FASTA.
-2. Converte DNA para RNA.
-3. Divide a sequência em códons.
-4. Traduz cada códon utilizando o código genético.
-5. Retorna as possíveis proteínas em cada reading frame.
+```text
+Sequência DNA/RNA
+        |
+        v
+Conversão para RNA
+        |
+        v
+Separação em códons
+        |
+        v
+Tradução pelo código genético
+        |
+        v
+Proteínas possíveis nos frames
+```
 
 ---
 
-# Formato FASTA
+# Arquivo FASTA
 
-O programa aceita arquivos no formato FASTA:
+O programa aceita sequências armazenadas no formato FASTA.
 
 Exemplo:
 
@@ -89,7 +96,7 @@ Exemplo:
 ATGGCCATTGTAATGGGCCGCTGAAAGGGTGCCCGATAG
 ```
 
-O cabeçalho (`>gene_exemplo_001`) identifica a sequência e as linhas seguintes contêm os nucleotídeos.
+O cabeçalho iniciado por `>` é ignorado e as linhas seguintes são utilizadas como sequência.
 
 ---
 
@@ -101,7 +108,9 @@ O cabeçalho (`>gene_exemplo_001`) identifica a sequência e as linhas seguintes
 python main.py exemplo.fasta
 ```
 
-Exemplo de saída:
+O programa carrega automaticamente a sequência e permite escolher a análise.
+
+Exemplo:
 
 ```text
 Sequência analisada:
@@ -109,15 +118,6 @@ Sequência analisada:
 ATGGCCATTGTAATGGGCCGCTGAAAGGGTGCCCGATAG
 
 
-Escolha a análise:
-
-1 - Traduzir 3 frames
-2 - Traduzir 6 frames
-```
-
-Resultado:
-
-```text
 +1: MAIVMGR*KGAR*
 +2: WPL*WAAERV
 +3: GHCNGPLKGC
@@ -128,15 +128,15 @@ Resultado:
 
 ---
 
-## Executando sem arquivo
+## Executando no modo interativo
 
-Também é possível iniciar o programa sem argumentos:
+Também é possível executar sem informar um arquivo:
 
 ```bash
 python main.py
 ```
 
-Nesse modo, o usuário pode inserir uma sequência manualmente ou informar um arquivo FASTA.
+Nesse modo, o usuário pode inserir uma sequência manualmente ou carregar um arquivo FASTA.
 
 ---
 
@@ -149,6 +149,7 @@ tradutor-dna/
 ├── testes.py
 ├── main.py
 ├── exemplo.fasta
+├── .gitignore
 └── README.md
 ```
 
@@ -158,27 +159,31 @@ Contém:
 
 * tabela do código genético;
 * tradução de frames;
-* tradução dos seis reading frames;
-* cálculo do reverso-complementar;
-* leitura de arquivos FASTA.
+* tradução dos três e seis reading frames;
+* cálculo da sequência reverso-complementar;
+* leitura de arquivos FASTA;
+* validação de entradas.
 
 ## `testes.py`
 
 Contém testes automatizados para:
 
-* tradução de códons;
-* diferentes reading frames;
-* sequência reverso-complementar;
-* leitura de FASTA;
-* tradução dos seis frames.
+* tradução de frames;
+* conversão DNA/RNA;
+* tradução dos três frames;
+* tradução dos seis frames;
+* reverso-complementar de DNA e RNA;
+* tratamento de códons inválidos;
+* validação de frames;
+* leitura de arquivos FASTA.
 
 ## `main.py`
 
 Responsável pela execução do programa:
 
-* recebe arquivos FASTA pela linha de comando;
-* permite entrada manual;
-* exibe os resultados das traduções.
+* leitura de arquivos FASTA via linha de comando;
+* entrada manual de sequências;
+* apresentação dos resultados das traduções.
 
 ---
 
@@ -196,7 +201,7 @@ Entre na pasta:
 cd protein-translator
 ```
 
-Execute com FASTA:
+Execute com um arquivo FASTA:
 
 ```bash
 python main.py exemplo.fasta
@@ -208,7 +213,7 @@ Ou execute no modo interativo:
 python main.py
 ```
 
-Para executar os testes:
+Execute os testes:
 
 ```bash
 python testes.py
@@ -232,12 +237,12 @@ python testes.py
 * [x] Tradução dos seis reading frames.
 * [x] Leitura de arquivos FASTA.
 * [x] Testes automatizados.
-* [ ] Identificação automática de ORFs (Open Reading Frames).
+* [x] Validação de entradas.
+* [ ] Identificação automática de ORFs (*Open Reading Frames*).
 * [ ] Seleção da maior ORF candidata.
-* [ ] Saída em aminoácidos de três letras (Met, Val, Phe...).
+* [ ] Saída em aminoácidos de três letras (`Met`, `Val`, `Phe`).
 * [ ] Exportação dos resultados.
 * [ ] Integração com bancos de dados de proteínas.
-* [ ] Interface gráfica.
 
 ---
 
@@ -245,7 +250,7 @@ python testes.py
 
 Este projeto foi desenvolvido como prática de programação em Python aplicada à Bioinformática.
 
-O objetivo é demonstrar como conceitos de Biologia Molecular, como **código genético**, **códons**, **reading frames** e **tradução proteica**, podem ser aplicados na construção de ferramentas computacionais para análise de sequências.
+O objetivo é demonstrar como conceitos de Biologia Molecular, como **código genético**, **códons**, **reading frames** e **tradução proteica**, podem ser aplicados na construção de ferramentas computacionais para análise de sequências biológicas.
 
 ---
 

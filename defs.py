@@ -17,23 +17,39 @@ codigo_genetico_rna = {
     "GGU":"G","GGC":"G","GGA":"G","GGG":"G"
 }
 
+
 def traduzir_frame(sequencia, tabela, frame):
     """
-    Traduz um único reading frame (0, 1 ou 2).
+    Traduz um único reading frame.
+
+    frame:
+    0 -> +1
+    1 -> +2
+    2 -> +3
     """
 
+    if frame not in [0, 1, 2]:
+        raise ValueError(
+            "Frame deve ser 0, 1 ou 2."
+        )
+
     sequencia = sequencia.upper().replace("T", "U")
+
     proteina = ""
 
     for i in range(frame, len(sequencia) - 2, 3):
+
         codon = sequencia[i:i+3]
+
         proteina += tabela.get(codon, "?")
 
     return proteina
 
+
+
 def traduzir_tres_frames(sequencia, tabela):
     """
-    Retorna as traduções dos frames +1, +2 e +3.
+    Traduz os três reading frames da fita original.
     """
 
     return {
@@ -42,59 +58,111 @@ def traduzir_tres_frames(sequencia, tabela):
         "+3": traduzir_frame(sequencia, tabela, 2)
     }
 
+
+
 def reverso_complementar(sequencia):
     """
-    Gera a sequência reverso-complementar.
+    Retorna a sequência reverso-complementar.
     Aceita DNA ou RNA.
     """
 
     sequencia = sequencia.upper()
 
     if "U" in sequencia:
+
         complemento = {
-            "A":"U",
-            "U":"A",
-            "C":"G",
-            "G":"C"
-        }
-    else:
-        complemento = {
-            "A":"T",
-            "T":"A",
-            "C":"G",
-            "G":"C"
+            "A": "U",
+            "U": "A",
+            "C": "G",
+            "G": "C"
         }
 
-    return "".join(complemento[base] for base in reversed(sequencia))
+    else:
+
+        complemento = {
+            "A": "T",
+            "T": "A",
+            "C": "G",
+            "G": "C"
+        }
+
+
+    try:
+
+        return "".join(
+            complemento[base]
+            for base in reversed(sequencia)
+        )
+
+    except KeyError as erro:
+
+        raise ValueError(
+            f"Base inválida encontrada: {erro.args[0]}"
+        )
+
+
 
 def traduzir_seis_frames(sequencia, tabela):
     """
-    Traduz os seis reading frames.
+    Traduz os seis reading frames:
+    +1, +2, +3, -1, -2 e -3.
     """
 
     resultado = {}
 
-    # fita direta
-    resultado.update(traduzir_tres_frames(sequencia, tabela))
+    resultado.update(
+        traduzir_tres_frames(
+            sequencia,
+            tabela
+        )
+    )
 
-    # fita reverso-complementar
     reversa = reverso_complementar(sequencia)
 
-    resultado["-1"] = traduzir_frame(reversa, tabela, 0)
-    resultado["-2"] = traduzir_frame(reversa, tabela, 1)
-    resultado["-3"] = traduzir_frame(reversa, tabela, 2)
+
+    resultado["-1"] = traduzir_frame(
+        reversa,
+        tabela,
+        0
+    )
+
+    resultado["-2"] = traduzir_frame(
+        reversa,
+        tabela,
+        1
+    )
+
+    resultado["-3"] = traduzir_frame(
+        reversa,
+        tabela,
+        2
+    )
 
     return resultado
 
+
+
 def ler_fasta(caminho_arquivo):
     """
-    Lê um arquivo FASTA e retorna a sequência.
+    Lê um arquivo FASTA simples
+    e retorna a sequência.
     """
 
-    with open(caminho_arquivo, "r") as arquivo:
-        linhas = arquivo.readlines()
+    sequencia = ""
 
-    # Remove a primeira linha (cabeçalho) e junta as demais
-    sequencia = "".join(linha.strip() for linha in linhas[1:])
+    with open(caminho_arquivo, "r") as arquivo:
+
+        for linha in arquivo:
+
+            linha = linha.strip()
+
+            if not linha:
+                continue
+
+            if linha.startswith(">"):
+                continue
+
+            sequencia += linha
+
 
     return sequencia.upper()
